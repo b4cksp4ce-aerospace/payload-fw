@@ -5,11 +5,13 @@
 # Build
 
 * Install [platformio](https://platformio.org/install)
-* do `pio run`
+* do `pio run` for build
+* do `pio run --target upload` for upload
 
 # HW
 
 STM32F013C8T6 / BluePill.
+ST-Link for upload.
 
 ## Contributing
 
