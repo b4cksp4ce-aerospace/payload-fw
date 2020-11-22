@@ -1,11 +1,14 @@
 #include "main.h"
+#include "cmsis_os.h"
 
+// starts from StartDefaultTask in freertos.c
+// see task parameters in MX_FREERTOS_Init
 void app() {
     while(1) {
         HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_RESET);
-        HAL_Delay(50);
+        osDelay(100);
         HAL_GPIO_WritePin(USER_LED_GPIO_Port, USER_LED_Pin, GPIO_PIN_SET);
 
-        HAL_Delay(200);
+        osDelay(400);
     }
 }
