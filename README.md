@@ -2,15 +2,16 @@
 
 Прошивка для электроники летадла космической программы B4CKSP4CE.
 
-# Build
+## Building
 
 * Install [platformio](https://platformio.org/install)
 * do `pio run` for build
 * do `pio run --target upload` for upload
 
-# HW
+## HW
 
 STM32F013C8T6 / BluePill.
+
 ST-Link for upload.
 
 ## Contributing
