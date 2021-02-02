@@ -20,6 +20,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "spi.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -51,6 +53,15 @@
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
+
+int _write(int file, char *ptr, int len) {
+	int i;
+	HAL_UART_Transmit(&huart2, (uint8_t*) ptr, len, 50);
+	for (i = 0; i < len; i++) {
+		ITM_SendChar(*ptr++);
+	}
+	return len;
+}
 
 /* USER CODE END PFP */
 
@@ -87,7 +98,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_SPI1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  printf("\n\r\n\rStarting RTOS\r\n");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
