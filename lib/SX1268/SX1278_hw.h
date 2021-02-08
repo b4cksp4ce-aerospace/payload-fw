@@ -4,8 +4,6 @@
  *
  * Hardware layer for SX1278 LoRa module
  * 
- * few tunes for b4cksp4ce-aerospace program by Dmitriy Isaev 
- * issaev.dmitriy@gmail.com
  */
 
 #ifndef __SX1278_HW_HEADER

@@ -24,8 +24,18 @@
 
 #define DIO0_Pin            GPIO_PIN_0
 #define DIO0_GPIO_Port      GPIOA
+
 #define RESET_Pin           GPIO_PIN_1
 #define RESET_GPIO_Port     GPIOA
+
+
+// UART tx 		PA2
+// SPI MOSI 	PA7
+// SPI MISO		PA6
+// SPI CS		PA4
+// SPI CLK 		PA5
+
+
 
 extern SPI_HandleTypeDef hspi1;
 
@@ -83,7 +93,7 @@ void loraTest() {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		if (master == 1) {
-			printf("Master ...\r\n");
+			printf("\r\nMaster\r\n");
 			HAL_Delay(1000);
 			printf("Sending package...\r\n");
 
@@ -96,8 +106,8 @@ void loraTest() {
 					message_length, 2000);
 			message += 1;
 
-			printf("Transmission: %d\r\n", ret);
-			printf("Package sent...\r\n");
+			printf("Transmission: %s\r\n", ret ? "done":"timeout") ;
+			printf("Package sent\r\n");
 
 		} else {
 			printf("Slave ...\r\n");
@@ -105,7 +115,7 @@ void loraTest() {
 			printf("Receiving package...\r\n");
 
 			ret = SX1278_LoRaRxPacket(&SX1278);
-			printf("Received: %d\r\n", ret);
+			printf("Received: %s\r\n", ret ? "done":"timeout");
 			if (ret > 0) {
 				SX1278_read(&SX1278, (uint8_t*) buffer, ret);
 				printf("Content (%d): %s\r\n", ret, buffer);
