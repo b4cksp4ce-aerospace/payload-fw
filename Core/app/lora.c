@@ -42,7 +42,6 @@ extern SPI_HandleTypeDef hspi1;
 SX1278_hw_t SX1278_hw;
 SX1278_t SX1278;
 
-int master;
 int ret;
 
 char buffer[512];
@@ -54,13 +53,12 @@ void loraTest() {
 
     printf("Entering LoRa test\r\n");
 
-	master = HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
-	if (master == 1) {
+	bool master = HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin);
+
+	if (master) {
 		printf("Mode: Master\r\n");
-		HAL_GPIO_WritePin(MODE_GPIO_Port, MODE_Pin, GPIO_PIN_RESET);
 	} else {
 		printf("Mode: Slave\r\n");
-		HAL_GPIO_WritePin(MODE_GPIO_Port, MODE_Pin, GPIO_PIN_SET);
 	}
 
 	//initialize LoRa module
@@ -75,40 +73,45 @@ void loraTest() {
 	SX1278.hw = &SX1278_hw;
 
 	printf("Configuring LoRa module\r\n");
-	SX1278_init(&SX1278, 434000000, SX1278_POWER_17DBM, SX1278_LORA_SF_7,
-	SX1278_LORA_BW_125KHZ, SX1278_LORA_CR_4_5, SX1278_LORA_CRC_EN, 10);
+	SX1278_init(&SX1278,
+		434000000,
+		SX1278_POWER_17DBM,
+		SX1278_LORA_SF_7,
+		SX1278_LORA_BW_125KHZ,
+		SX1278_LORA_CR_4_5,
+		SX1278_LORA_CRC_EN,
+		10
+	);
 	printf("Done configuring LoRaModule\r\n");
 
-	if (master == 1) {
+	if (master) {
 		ret = SX1278_LoRaEntryTx(&SX1278, 16, 2000);
-		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+		
 	} else {
 		ret = SX1278_LoRaEntryRx(&SX1278, 16, 2000);
 		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 	}
 
-	/* USER CODE END 2 */
-
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
 	while (1) {
-		if (master == 1) {
-			printf("\r\nMaster\r\n");
-			HAL_Delay(1000);
-			printf("Sending package...\r\n");
+		if (master) {
+			printf("Sending package... ");
+
+			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
 			message_length = sprintf(buffer, "Hello %d", message);
 			ret = SX1278_LoRaEntryTx(&SX1278, message_length, 2000);
-			printf("Entry: %d\r\n", ret);
+			printf("Entry: %d. ", ret);
 
-			printf("Sending %s\r\n", buffer);
+			printf("Sending %s, ", buffer);
 			ret = SX1278_LoRaTxPacket(&SX1278, (uint8_t*) buffer,
 					message_length, 2000);
 			message += 1;
 
-			printf("Transmission: %s\r\n", ret ? "done":"timeout") ;
-			printf("Package sent\r\n");
+			printf("Transmission: %s.\r\n", ret ? "done":"timeout") ;
+			osDelay(10);
+			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
+			osDelay(500);
 		} else {
 			printf("Slave ...\r\n");
 			HAL_Delay(800);
@@ -121,10 +124,10 @@ void loraTest() {
 				printf("Content (%d): %s\r\n", ret, buffer);
 			}
 			printf("Package received ...\r\n");
-
 		}
 
 		//change mode
+		/*
 		if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin)) {
 			printf("Changing mode\r\n");
 			master = ~master & 0x01;
@@ -138,6 +141,7 @@ void loraTest() {
 			HAL_Delay(1000);
 			while (GPIO_PIN_RESET == HAL_GPIO_ReadPin(MODE_GPIO_Port, MODE_Pin));
 		}
+		*/
 	}
 }
 
