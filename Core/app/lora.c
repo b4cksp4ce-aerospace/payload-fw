@@ -80,7 +80,7 @@ void loraTest() {
 		};
 
 		// packet size
-		if(dip[2]) {
+		if(dip[7]) {
 			message = "#S5AC3";
 		} else {
 			message = "#S5AC3-1x2x3x4x5x6x7x8x9x0y1y2y3y4y5y6";
@@ -88,11 +88,11 @@ void loraTest() {
 
 		printf("%s,%s,%s,%s,%s,%s. ",
 			dip[1] ? "m" : "s",
-			dip[2] ? "7" : "39",
 			dip[3] ? "SF7" : "SF12",
 			dip[4] ? "500k" : "125k",
 			dip[5] ? "4/5" : "4/8",
-			dip[6] ? "CRC" : "nCRC"
+			dip[6] ? "CRC" : "nCRC",
+			dip[7] ? "7" : "39"
 		);
 
 		printf("conf...");
@@ -103,7 +103,7 @@ void loraTest() {
 			dip[4] ? SX1278_LORA_BW_500KHZ : SX1278_LORA_BW_125KHZ,
 			dip[5] ? SX1278_LORA_CR_4_5 : SX1278_LORA_CR_4_8,
 			dip[6] ? SX1278_LORA_CRC_EN : SX1278_LORA_CRC_DIS,
-			dip[2] ? 7 : 39
+			dip[7] ? 7 : 39
 		);
 		printf("done. ");
 		
