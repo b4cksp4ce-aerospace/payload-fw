@@ -78,6 +78,8 @@ void Error_Handler(void);
 #define DIP_7_GPIO_Port GPIOA
 #define DIP_8_Pin GPIO_PIN_12
 #define DIP_8_GPIO_Port GPIOA
+#define PA_Pin GPIO_PIN_9
+#define PA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

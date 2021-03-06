@@ -109,6 +109,9 @@ void loraTest() {
 		
 		if (dip[1]) {
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(PA_GPIO_Port, PA_Pin, GPIO_PIN_SET);
+
+			osDelay(2);
 
 			message_length = sprintf(buffer, "%c%s", message_id, message);
 			ret = SX1278_LoRaEntryTx(&SX1278, message_length, 2000);
@@ -119,6 +122,8 @@ void loraTest() {
 			message_id++;
 
 			printf("... %s.\r\n", ret ? "done":"timeout") ;
+
+			HAL_GPIO_WritePin(PA_GPIO_Port, PA_Pin, GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
 			osDelay(250);
