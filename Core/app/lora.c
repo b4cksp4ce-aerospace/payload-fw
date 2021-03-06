@@ -131,6 +131,8 @@ void loraTest() {
 			printf("Receiving package...\r\n");
 			uint32_t timeout = 0;
 
+			ret = SX1278_LoRaEntryRx(&SX1278, dip[7] ? 7 : 39, 2000);
+
 			ret = SX1278_LoRaRxPacket(&SX1278);
 
 			while(timeout < 2000) {
