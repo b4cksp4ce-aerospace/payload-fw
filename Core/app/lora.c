@@ -100,13 +100,14 @@ void loraTest() {
 
 			message_length = sprintf(buffer, "%c%s", message_id, message);
 			ret = SX1278_LoRaEntryTx(&SX1278, message_length, 2000);
-			printf("Entry: %d. id: %d, length: %d ", ret, message_id, message_length);
+			printf("Entry: %d. id: %d, l: %d ", ret, message_id, message_length);
 
 			ret = SX1278_LoRaTxPacket(&SX1278, (uint8_t*) buffer,
 					message_length, 2000);
 			message_id++;
+			osDelay(10);
 
-			printf("Transmission: %s.\r\n", ret ? "done":"timeout") ;
+			printf("... %s.\r\n", ret ? "done":"timeout") ;
 			osDelay(10);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
