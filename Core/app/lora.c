@@ -69,28 +69,7 @@ void loraTest() {
 	SX1278_hw.reset.port = RESET_GPIO_Port;
 	SX1278_hw.reset.pin = RESET_Pin;
 	SX1278_hw.spi = &hspi1;
-
 	SX1278.hw = &SX1278_hw;
-
-	printf("Configuring LoRa module\r\n");
-	SX1278_init(&SX1278,
-		434000000,
-		SX1278_POWER_17DBM,
-		SX1278_LORA_SF_7,
-		SX1278_LORA_BW_125KHZ,
-		SX1278_LORA_CR_4_5,
-		SX1278_LORA_CRC_EN,
-		10
-	);
-	printf("Done configuring LoRaModule\r\n");
-
-	if (master) {
-		ret = SX1278_LoRaEntryTx(&SX1278, 16, 2000);
-		
-	} else {
-		ret = SX1278_LoRaEntryRx(&SX1278, 16, 2000);
-		HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-	}
 
 	while (1) {
 		// change LORA param
@@ -103,7 +82,18 @@ void loraTest() {
 		}
 
 		if (master) {
-			printf("Sending package... ");
+			printf("conf...");
+			SX1278_init(&SX1278,
+				434000000,
+				SX1278_POWER_20DBM,
+				SX1278_LORA_SF_7,
+				SX1278_LORA_BW_125KHZ,
+				SX1278_LORA_CR_4_5,
+				SX1278_LORA_CRC_EN,
+				10
+			);
+			printf("done. ");
+
 
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
@@ -119,7 +109,7 @@ void loraTest() {
 			osDelay(10);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
-			osDelay(500);
+			osDelay(10);
 		} else {
 			printf("Slave ...\r\n");
 			HAL_Delay(800);
