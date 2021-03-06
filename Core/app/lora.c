@@ -94,7 +94,7 @@ void loraTest() {
 			dip[6] ? "CRC" : "nCRC",
 			dip[7] ? "7" : "39"
 		);
-
+		
 		printf("conf...");
 		SX1278_init(&SX1278,
 			434000000,
@@ -105,7 +105,7 @@ void loraTest() {
 			dip[6] ? SX1278_LORA_CRC_EN : SX1278_LORA_CRC_DIS,
 			dip[7] ? 7 : 39
 		);
-		printf("done. ");
+    	printf("done. ");
 		
 		if (dip[1]) {
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
@@ -131,18 +131,20 @@ void loraTest() {
 			printf("Receiving package...\r\n");
 			uint32_t timeout = 0;
 
-			ret = SX1278_LoRaEntryRx(&SX1278, dip[7] ? 7 : 39, 2000);
-
-			ret = SX1278_LoRaRxPacket(&SX1278);
-
-			while(timeout < 2000) {
-				if (ret > 0) {
-					SX1278_read(&SX1278, (uint8_t*) buffer, ret);
-					printf("Content (%d): %s\r\n", ret, buffer);
-					break;
-				} else {
-					timeout += 10;
-					osDelay(10);
+			if(!SX1278_LoRaEntryRx(&SX1278, dip[7] ? 7 : 39, 2000)) {
+				printf("error entry RX\r\n");
+			} else {
+				while(timeout < 2000) {
+					ret = SX1278_LoRaRxPacket(&SX1278);
+					
+					if (ret > 0) {
+						SX1278_read(&SX1278, (uint8_t*) buffer, ret);
+						printf("Content (%d): %s\r\n", ret, buffer);
+						break;
+					} else {
+						timeout += 10;
+						osDelay(10);
+					}
 				}
 			}
 		}
