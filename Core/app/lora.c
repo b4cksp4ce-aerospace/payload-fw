@@ -75,6 +75,7 @@ void loraTest() {
 		// change LORA param
 		char* message = NULL;
 
+		// packet size
 		if(true) {
 			message = "#S5AC3";
 		} else {
@@ -86,11 +87,11 @@ void loraTest() {
 			SX1278_init(&SX1278,
 				434000000,
 				SX1278_POWER_20DBM,
-				SX1278_LORA_SF_7,
-				SX1278_LORA_BW_125KHZ,
-				SX1278_LORA_CR_4_5,
-				SX1278_LORA_CRC_EN,
-				10
+				true ? SX1278_LORA_SF_7 : SX1278_LORA_SF_12,
+				true ? SX1278_LORA_BW_500KHZ : SX1278_LORA_BW_125KHZ,
+				true ? SX1278_LORA_CR_4_5 : SX1278_LORA_CR_4_8,
+				true ? SX1278_LORA_CRC_EN : SX1278_LORA_CRC_DIS,
+				true ? 7 : 39
 			);
 			printf("done. ");
 
@@ -109,7 +110,7 @@ void loraTest() {
 			osDelay(10);
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
-			osDelay(10);
+			osDelay(250);
 		} else {
 			printf("Slave ...\r\n");
 			HAL_Delay(800);
