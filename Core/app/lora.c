@@ -139,7 +139,12 @@ void loraTest() {
 					
 					if (ret > 0) {
 						SX1278_read(&SX1278, (uint8_t*) buffer, ret);
-						printf("l: %d, id:%d %s\r\n", ret, buffer[0], &buffer[1]);
+						printf("-%d dBm, l:%d,id:%d %s\r\n",
+							SX1278_RSSI_LoRa(&SX1278),
+							ret,
+							buffer[0],
+							&buffer[1]
+						);
 						break;
 					} else {
 						timeout += 10;
