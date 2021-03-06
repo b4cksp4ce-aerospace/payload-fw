@@ -123,17 +123,21 @@ void loraTest() {
 
 			osDelay(250);
 		} else {
-			printf("Slave ...\r\n");
-			HAL_Delay(800);
 			printf("Receiving package...\r\n");
+			uint32_t timeout = 0;
 
 			ret = SX1278_LoRaRxPacket(&SX1278);
-			printf("Received: %s\r\n", ret ? "done":"timeout");
-			if (ret > 0) {
-				SX1278_read(&SX1278, (uint8_t*) buffer, ret);
-				printf("Content (%d): %s\r\n", ret, buffer);
+
+			while(timeout < 2000) {
+				if (ret > 0) {
+					SX1278_read(&SX1278, (uint8_t*) buffer, ret);
+					printf("Content (%d): %s\r\n", ret, buffer);
+					break;
+				} else {
+					timeout += 10;
+					osDelay(10);
+				}
 			}
-			printf("Package received ...\r\n");
 		}
 	}
 }
