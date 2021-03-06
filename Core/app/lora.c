@@ -46,7 +46,7 @@ int ret;
 
 char buffer[512];
 
-int message;
+uint8_t message_id = 0;
 int message_length;
 
 void loraTest() {
@@ -93,19 +93,27 @@ void loraTest() {
 	}
 
 	while (1) {
+		// change LORA param
+		char* message = NULL;
+
+		if(true) {
+			message = "#S5AC3";
+		} else {
+			message = "#S5AC3-1x2x3x4x5x6x7x8x9x0y1y2y3y4y5y6";
+		}
+
 		if (master) {
 			printf("Sending package... ");
 
 			HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
-			message_length = sprintf(buffer, "Hello %d", message);
+			message_length = sprintf(buffer, "%c%s", message_id, message);
 			ret = SX1278_LoRaEntryTx(&SX1278, message_length, 2000);
-			printf("Entry: %d. ", ret);
+			printf("Entry: %d. id: %d, length: %d ", ret, message_id, message_length);
 
-			printf("Sending %s, ", buffer);
 			ret = SX1278_LoRaTxPacket(&SX1278, (uint8_t*) buffer,
 					message_length, 2000);
-			message += 1;
+			message_id++;
 
 			printf("Transmission: %s.\r\n", ret ? "done":"timeout") ;
 			osDelay(10);
